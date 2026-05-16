@@ -118,12 +118,15 @@ while jogar_novamente == 's':
     palavra_sorteada_lower = palavra_sorteada.lower()
     contador_dicas = -1
 
+    letras_tentadas = []
     while True:
 
         for letra in letras_display:
             print(letra, end=' ')
 
         print(boneco[6 - vidas])
+        if letras_tentadas:
+            print('Letras erradas:', letras_tentadas)
         palpite = input('\nDigite uma letra ou a palavra completa: ')
         palpite = palpite.lower()
 
@@ -138,9 +141,11 @@ while jogar_novamente == 's':
                 vidas -= 1
                 contador_dicas += 1
                 print(f'Ops, {player_name}! A letra não está na palavra.')
-                letras_tentadas = [letra for letra in letras_display if letra != '_']
                 pontuacao -= 5
                 print('Dica:', dicas_sorteada[contador_dicas])
+                letras_tentadas.append(palpite)
+                
+
 
 
 
