@@ -36,111 +36,135 @@ dicas = [
 ]
 
 boneco = [
-    '''
+'''
   _____
  |     |
- |     
- |     
- |     
+ |      
+ |      
+ |      
 _|_
 ''',
-    '''
-  _____
- |     |
- |     O
- |     
- |     
-_|_
-''',
-    '''
+'''
   _____
  |     |
  |     O
- |     |
- |     
+ |      
+ |      
 _|_
 ''',
-    '''
+'''
+  _____
+ |     |
+ |     O
+ |     |
+ |      
+_|_
+''',
+'''
   _____
  |     |
  |     O
  |    /|
- |     
+ |      
 _|_
 ''',
-    '''
+'''
   _____
  |     |
  |     O
- |    /|\
+ |    /|\\
+ |      
+_|_
+''',
+'''
+  _____
+ |     |
+ |     O
+ |    /|\\
  |    / 
 _|_
 ''',
-    '''
+'''
   _____
  |     |
  |     O
- |    /|\
- |    / \
+ |    /|\\
+ |    / \\
 _|_
 '''
 ]
 
-indice = random.randint(0, 9)
-palavra_sorteada = palavra[indice]
-dicas_sorteada = dicas[indice]
+player_name = input('Digite seu nome: ')
+jogar_novamente = 's'
+pontuacao = 0
+while jogar_novamente == 's':
+    indice = random.randint(0, 9)
+    palavra_sorteada = palavra[indice]
+    dicas_sorteada = dicas[indice]
 
-letras_display = []
+    letras_display = []
 
-for letra in palavra_sorteada:
-    if letra == ' ':
-        letras_display.append(' ')
-    else:
-        letras_display.append('_')
-
-print('Bem-vindo ao jogo de adivinhação de palavras!')
-print('A palavra a ser adivinhada tem', len(palavra_sorteada), 'letras.')
-
-vidas = 5
-palavra_sorteada_lower = palavra_sorteada.lower()
-contador_dicas = -1
-
-while True:
-
-    for letra in letras_display:
-        print(letra, end=' ')
-
-    print(boneco[5 - vidas])
-    palpite = input('\nDigite uma letra ou a palavra completa: ')
-    palpite = palpite.lower()
-
-    if len(palpite) == 1:
-        if palpite in palavra_sorteada_lower:
-            for i in range(len(palavra_sorteada_lower)):
-                if palavra_sorteada_lower[i] == palpite.lower():
-                    letras_display[i] = palavra_sorteada[i]     
-            print('Parabéns! Você acertou uma letra!')
+    for letra in palavra_sorteada:
+        if letra == ' ':
+            letras_display.append(' ')
         else:
-            vidas -= 1
-            contador_dicas += 1
-            print('Ops! A letra não está na palavra.')
-            print('Dica:', dicas_sorteada[contador_dicas])
+            letras_display.append('_')
+
+    print('Bem-vindo ao jogo de adivinhação de palavras!')
+    print(f'Olá, {player_name}! Vamos começar o jogo!')
+    print('A palavra a ser adivinhada tem', len(palavra_sorteada), 'letras.')
+
+    vidas = 6
+    palavra_sorteada_lower = palavra_sorteada.lower()
+    contador_dicas = -1
+
+    while True:
+
+        for letra in letras_display:
+            print(letra, end=' ')
+
+        print(boneco[6 - vidas])
+        palpite = input('\nDigite uma letra ou a palavra completa: ')
+        palpite = palpite.lower()
+
+        if len(palpite) == 1:
+            if palpite in palavra_sorteada_lower:
+                for i in range(len(palavra_sorteada_lower)):
+                    if palavra_sorteada_lower[i] == palpite.lower():
+                        letras_display[i] = palavra_sorteada[i]     
+                print(f'Parabéns, {player_name}! Você acertou uma letra!')
+                pontuacao += 10
+            else:
+                vidas -= 1
+                contador_dicas += 1
+                print(f'Ops, {player_name}! A letra não está na palavra.')
+                letras_tentadas = [letra for letra in letras_display if letra != '_']
+                pontuacao -= 5
+                print('Dica:', dicas_sorteada[contador_dicas])
 
 
-    elif len(palpite) == len(palavra_sorteada_lower):
-        if palpite == palavra_sorteada_lower:
-            print('Parabéns! Você acertou a palavra completa!')
+
+        elif len(palpite) == len(palavra_sorteada_lower):
+            if palpite == palavra_sorteada_lower:
+                print(f'Parabéns, {player_name}! Você acertou a palavra completa!')
+                pontuacao += 50
+                break
+            else:
+                vidas -= 5
+                print(f'Ops, {player_name}! A palavra digitada está incorreta.')
+                pontuacao -= 20
+        
+        if '_' not in letras_display:
+            print(f'Parabéns, {player_name}! Você adivinhou a palavra:', palavra_sorteada)
             break
-        else:
-            vidas -= 5
-            print('Ops! A palavra digitada está incorreta.')
-    
-    if '_' not in letras_display:
-        print('Parabéns! Você adivinhou a palavra:', palavra_sorteada)
-        break
-    
-    if vidas <= 0:
-        print('Game Over! Você perdeu todas as suas vidas.')
-        print('A palavra correta era:', palavra_sorteada)
-        break
+        
+        if vidas <= 0:
+            print('Game Over! Você perdeu todas as suas vidas.')
+            print(boneco[6])
+            print('A palavra correta era:', palavra_sorteada)
+            break
+    print(f'Sua pontuação atual é: {pontuacao}')
+    jogar_novamente = input('Deseja jogar novamente? (s/n): ')
+    while jogar_novamente not in ['s', 'n']:
+        jogar_novamente = input('Opção inválida. Deseja jogar novamente? (s/n): ')
 
