@@ -72,16 +72,16 @@ _|_
   _____
  |     |
  |     O
- |    /|\\
- |     
+ |    /|\
+ |    / 
 _|_
 ''',
     '''
   _____
  |     |
  |     O
- |    /|\\
- |    / 
+ |    /|\
+ |    / \
 _|_
 '''
 ]
@@ -110,6 +110,7 @@ while True:
     for letra in letras_display:
         print(letra, end=' ')
 
+    print(boneco[5 - vidas])
     palpite = input('\nDigite uma letra ou a palavra completa: ')
     palpite = palpite.lower()
 
