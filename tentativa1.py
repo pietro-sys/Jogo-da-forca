@@ -192,6 +192,7 @@ while jogar_novamente == 's':
             limpar_tela()
             break
     print(f'Sua pontuação atual é: {pontuacao}')
+    
     if modo == '2':
         if vidas <= 0:
             jogar_novamente = 'n'
@@ -203,6 +204,7 @@ while jogar_novamente == 's':
         jogar_novamente = input('Deseja jogar novamente? (s/n): ')
         while jogar_novamente not in ['s', 'n']:
             jogar_novamente = input('Opção inválida. Deseja jogar novamente? (s/n): ')
+            
 print(f'Você jogou {sequencia} vezes em sequência!' if modo == '2' else '')
 print(f'Obrigado por jogar, {player_name}! Sua pontuação final é: {pontuacao}. Até a próxima!')
 limpar_tela()
