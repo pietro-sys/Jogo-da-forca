@@ -99,11 +99,13 @@ _|_
 ]
 
 player_name = input('Digite seu nome: ')
+modo = input('Escolha o modo: (1) Normal  (2) Infinito: ')
 jogar_novamente = 's'
 pontuacao = 0
 print(f'Olá, {player_name}! Bem-vindo ao jogo de adivinhação de palavras!')
 print('Vamos começar o jogo!')
 limpar_tela()
+sequencia = 0
 
 while jogar_novamente == 's':
     indice = random.randint(0, 9)
@@ -190,9 +192,18 @@ while jogar_novamente == 's':
             limpar_tela()
             break
     print(f'Sua pontuação atual é: {pontuacao}')
-    jogar_novamente = input('Deseja jogar novamente? (s/n): ')
-    while jogar_novamente not in ['s', 'n']:
-        jogar_novamente = input('Opção inválida. Deseja jogar novamente? (s/n): ')
+    if modo == '2':
+        if vidas <= 0:
+            jogar_novamente = 'n'
+        else:
+            jogar_novamente = 's'
+            sequencia += 1
+            print(f'Você está em uma sequência de {sequencia} vitórias!')
+    else:
+        jogar_novamente = input('Deseja jogar novamente? (s/n): ')
+        while jogar_novamente not in ['s', 'n']:
+            jogar_novamente = input('Opção inválida. Deseja jogar novamente? (s/n): ')
+print(f'Você jogou {sequencia} vezes em sequência!' if modo == '2' else '')
 print(f'Obrigado por jogar, {player_name}! Sua pontuação final é: {pontuacao}. Até a próxima!')
 limpar_tela()
 
