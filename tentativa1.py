@@ -165,7 +165,6 @@ limpar_tela()
 # Loop principal
 # ─────────────────────────────────────────
 while jogar_novamente == 's':
-    global tempo_esgotado
     tempo_esgotado = False
 
     indice = random.randint(0, len(palavra) - 1)
