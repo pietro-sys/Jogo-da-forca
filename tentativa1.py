@@ -3,65 +3,31 @@ import random      # Para sortear palavras aleatórias
 import os          # Para limpar a tela do terminal
 import time        # Para trabalhar com tempo/cronômetro
 import threading   # Para criar uma thread separada para o cronômetro
-
+import os.path 
+import sys
 
 # Função para limpar a tela do terminal
 def limpar_tela():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+if not os.path.exists("Palavras.txt"):
+    print("Arquivo Palavras.txt não encontrado!")
+    exit()
 
-# Lista de palavras possíveis do jogo
-palavra = [
-    'Valorant', 
-    'Six Seven',
-    'Fallen',
-    'Bob Esponja',
-    'Snorlax',
-    'Freddie Mercury',
-    'Goku',
-    'Fatec',
-    'Python',
-    'Cachorro',
-    'Vaso',
-    'Quasar',
-    'Pederneira',
-    'Carambola',
-    'Preguiça'
-    ]
+palavra = []
+dicas = []
 
-# Lista de dicas relacionadas às palavras
-# Cada índice corresponde à palavra da mesma posição
-dicas = [
-    ['É um tipo de mídia de entretenimento digital', 'Envolve competição entre jogadores', 'É um jogo eletrônico do estilo tático de tiro', 'Foi desenvolvido pela Riot Games', 'Possui agentes com habilidades especiais', 'O melhor jogador do mundo é brasileiro e se chama Aspas'],
+arquivo = open("Palavras.txt", "r", encoding="utf-8")
 
-    ['É um termo usado em esportes', 'Tem relação com números', 'É uma altura medida em pés e polegadas', 'Equivale a aproximadamente 2 metros', 'É uma altura comum em jogadores de basquete', 'É a altura do jogador brasileiro de basquete Anderson Varejão'],
+for linha in arquivo.readlines():
 
-    ['É uma palavra em inglês', 'Tem relação com o mundo dos games competitivos', 'É um jogador profissional brasileiro', 'É conhecido como o professor', 'É um lendário jogador de CS:GO', 'É o melhor jogador de CS:GO de todos os tempos'],
+    parte = linha.strip().split("#")
 
-    ['É um personagem fictício', 'Vive debaixo do mar', 'Trabalha como cozinheiro', 'Mora em uma abacaxi', 'Possui uma risada marcante', 'É uma esponja amarela e quadrada'],
+    palavra.append(parte[0])        # palavra
 
-    ['É um personagem fictício japonês', 'Aparece em uma famosa franquia de jogos e anime', 'É conhecido por dormir muito', 'É um Pokemon do tipo Normal', 'É um Pokemon enorme e gordo de cor azul', 'É o melhor pokemon para dormir'],
+    dicas.append(parte[1:])         # lista de dicas
 
-    ['Foi uma pessoa famosa no século XX', 'Era britânico nascido em Zanzibar', 'Era conhecido por suas apresentações ao vivo energéticas', 'Foi vocalista de uma banda de rock famosa', 'Foi o vocalista do Queen', 'É considerado um dos maiores cantores de todos os tempos'],
-
-    ['É um personagem fictício japonês', 'Aparece em um anime famoso dos anos 80', 'Tem o cabelo espetado e muda de cor quando fica forte', 'Usa uma roupa laranja e azul', 'Seu nome completo é Kakarot', 'É um dos personagens mais icônicos da cultura pop mundial'],
-
-    ['É uma instituição brasileira', 'Oferece cursos de nível superior', 'É uma faculdade pública gratuita', 'Está presente em diversas cidades de São Paulo', 'É uma faculdade de tecnologia do estado de São Paulo', 'É conhecida por seus cursos de tecnologia'],
-
-    ['É um termo que pode ter vários significados', 'Na natureza, é um tipo de animal', 'Na tecnologia, é algo muito utilizado por profissionais', 'É uma das linguagens de programação mais populares do mundo', 'É a linguagem de programação que você está usando agora', 'É uma linguagem de programação conhecida por sua simplicidade e versatilidade'],
-
-    ['É um ser vivo', 'É um animal doméstico muito comum', 'É considerado o melhor amigo do homem', 'Faz o som de latido', 'É um animal de quatro patas que abana o rabo', 'É um animal que pode ser encontrado em diversas raças e tamanhos, e é conhecido por sua lealdade e companheirismo'],
-    
-    ['É um objeto muito comum em casas', 'Pode ser feito de vidro, cerâmica ou plástico', 'É usado principalmente para decoração', 'Muitas vezes contém flores ou plantas', 'Pode ficar sobre mesas ou estantes', 'Serve para colocar flores, plantas ou enfeites'],
-
-    ['Tem relação com o universo', 'É um objeto estudado pela astronomia', 'Fica extremamente distante da Terra', 'Libera uma enorme quantidade de energia', 'Está ligado à presença de buracos negros supermassivos', 'É um dos objetos mais brilhantes do universo'],
-
-    ['É um objeto encontrado na natureza', 'Tem relação com fogo', 'Foi muito usada na antiguidade', 'Pode produzir faíscas quando atritada', 'Era utilizada para acender fogueiras e armas antigas', 'É uma pedra usada para gerar faíscas'],
-
-    ['É um alimento natural', 'Pode ser encontrada em árvores', 'Tem sabor agridoce', 'Quando cortada possui formato de estrela', 'É uma fruta tropical bastante conhecida', 'É uma fruta amarela chamada fruta-estrela'],
-
-    ['É um animal', 'Vive em árvores', 'É conhecido por seus movimentos lentos', 'Possui garras longas para se pendurar', 'Passa grande parte do tempo dormindo', 'É um mamífero famoso pela lentidão']
-]
+arquivo.close()
 
 # Desenhos da forca conforme o jogador erra
 boneco = [
@@ -229,7 +195,7 @@ print('╠═══════════════════════�
 
 # Exibe os níveis disponíveis
 for k, v in NIVEIS.items():
-    print(f'║  ({k}) {v["nome"]:<8} — ⏱  {v["tempo"]}s          ║')
+    print(f'║  ({k}) {v["nome"]:<8} — ⏱  {v["tempo"]}s       ║')
 
 print('╚══════════════════════════════╝')
 
@@ -258,6 +224,7 @@ while modo not in ['1', '2']:
 jogar_novamente = 's'
 pontuacao = 0
 sequencia = 0
+palavras_usadas = []
 
 # Mensagem inicial
 print(f'\nOlá, {player_name}! Bem-vindo ao Jogo da Forca!')
@@ -275,13 +242,39 @@ while jogar_novamente == 's':
 
     tempo_esgotado = False
 
-    # Sorteia uma palavra aleatória
-    indice = random.randint(0, len(palavra) - 1)
+    # =====================================================
+    # SORTEIO SEM REPETIÇÃO
+    # =====================================================
 
+    # Verifica se todas as palavras já foram usadas
+    if len(palavras_usadas) == len(palavra):
+
+        limpar_tela()
+
+        print('🎉 PARABÉNS!')
+        print('Você completou todas as palavras do jogo!')
+
+        print(f'\nPontuação final: {pontuacao}')
+
+        import sys
+        sys.exit()
+
+    # Sorteia até encontrar uma palavra ainda não usada
+    while True:
+
+        indice = random.randint(0, len(palavra) - 1)
+
+        if indice not in palavras_usadas:
+
+            palavras_usadas.append(indice)
+
+            break
+
+    # Define palavra e dicas
     palavra_sorteada = palavra[indice]
     dicas_sorteada = dicas[indice]
 
-    # Cria os "_" da palavra
+        # Cria os "_" da palavra
     letras_display = []
 
     for letra in palavra_sorteada:
@@ -290,7 +283,7 @@ while jogar_novamente == 's':
     # Configurações iniciais da rodada
     vidas = 6
     palavra_sorteada_lower = palavra_sorteada.lower()
-    contador_dicas = -1
+    contador_dicas = 0
     letras_tentadas = []
 
     # Inicia thread do cronômetro
@@ -387,7 +380,6 @@ while jogar_novamente == 's':
 
                 # Penaliza erro
                 vidas -= 1
-                contador_dicas += 1
 
                 pontuacao -= cfg['penalidade_letra']
 
@@ -398,6 +390,8 @@ while jogar_novamente == 's':
                 # Exibe dica
                 if contador_dicas < len(dicas_sorteada):
                     print(f'💡 Dica: {dicas_sorteada[contador_dicas]}')
+                    contador_dicas += 1
+
 
         # =================================================
         # PALPITE DA PALAVRA COMPLETA
@@ -458,7 +452,7 @@ while jogar_novamente == 's':
             sequencia += 1
 
             break
-
+            
         # Jogador perdeu
         if vidas <= 0:
 
@@ -505,7 +499,6 @@ while jogar_novamente == 's':
 
     # Modo normal
     else:
-
         jogar_novamente = input('Deseja jogar novamente? (s/n): ').lower()
 
         while jogar_novamente not in ['s', 'n']:
